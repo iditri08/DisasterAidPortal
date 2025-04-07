@@ -4,6 +4,7 @@
 A <strong>Flask-powered web application</strong> designed to streamline disaster management in India by providing real-time alerts, crowd-sourced incident reports, and centralized government resources.
 
 Key Features
+
 📍 **Live Interactive Maps:** Visualize active disasters and high-risk zones using API-integrated geodata.
 
 📢 **Crowdsourced Reporting:** Citizens can submit real-time disaster incidents with location and details.
@@ -36,6 +37,7 @@ India faces frequent natural disasters, but response systems are often fragmente
 ✔**Transparent:** Aggregates verified data from both officials and citizens.
 
 <h2>🔥 Contribute</h2>
+
 Open to collaborations! Help us improve:
 
 AI-based disaster prediction models
