@@ -1,25 +1,3 @@
-🚀 Disaster Aid Portal – Real-Time Alerts & Response for India
-
-A Flask-powered web app for efficient disaster management, featuring:
-✅ Live disaster maps (API-driven) & user-reported incidents
-✅ Govt. resources & emergency alerts via SMS/email
-✅ Tech: HTML/CSS/JS (Frontend) | Flask (Backend) | JSON & APIs (Integration)
-
-Empowering India with faster disaster response. 🌪️🛟
-
-Why this works:
-Fits GitHub’s preview without truncation.
-
-Highlights impact (real-time alerts + citizen reports).
-
-Specifies your stack clearly for contributors.
-
-Need tweaks? Let me know!
-
-🚀 Disaster Aid Portal – Real-Time Alerts & Response for India A Flask-powered web app for efficient disaster management, featuring: ✅ Live disaster maps (API-driven) & user-reported incidents ✅ Govt. resources & emergency alerts via web notifications ✅ Tech: HTML/CSS/JavaScript (Frontend) | Flask (Backend) | JSON & APIs (Integration)
-
-now provide a github repository description based on above short description
-Here’s a polished GitHub repository description based on your short version, expanded with key details while keeping it concise and impactful:
 
 🌍 Disaster Aid Portal – Real-Time Disaster Management for India
 A Flask-powered web application designed to streamline disaster management in India by providing real-time alerts, crowd-sourced incident reports, and centralized government resources.
