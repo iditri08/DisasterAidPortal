@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Disaster Resources</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <i class="fas fa-shield-alt"></i>
+            <h1>Disaster Aid Portal</h1>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="template.html">Dashboard</a></li>
+                <li><a href="alerts.html">Alerts</a></li>
+                <li><a href="resources.html" class="active">Resources</a></li>
+                <li><a href="about.html">About</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="resources-main">
+        <h2>Disaster Preparedness Resources</h2>
+        
+        <div class="resource-categories">
+            <div class="category">
+                <h3><i class="fas fa-book"></i> Guides & Manuals</h3>
+                <ul>
+                    <li><a href="https://www.adb.org/sites/default/files/publication/27890/disaster-management-handbook.pdf" target="_blank"> Disaster Preparedness Handbook</a></li>
+                    <li><a href="https://ndma.gov.in/Resources/awareness/First_Aid" target="_blank"> First Aid Manual</a></li>
+                    <li><a href="https://ncdc.mohfw.gov.in/wp-content/uploads/2024/07/DM-Plan_compressed.pdf" target="_blank"> Evacuation Planning Guide</a></li>
+                </ul>
+            </div>
+            
+            <div class="category">
+                <h3><i class="fas fa-video"></i> Training Videos</h3>
+                <div class="video-resources">
+                    <div class="video-item">
+                        <h4>Earthquake Safety</h4>
+                        <iframe width="100%" height="200" src="https://www.youtube.com/embed/BLEPakj1YTY?si=xrDTFPPu7eTpYVxp" frameborder="0" allowfullscreen></iframe>
+                    </div>
+                    <div class="video-item">
+                        <h4>Flood Preparedness</h4>
+                        <iframe width="100%" height="200" src="https://www.youtube.com/embed/43M5mZuzHF8?si=Tq06cwR-ig2zIEnB" frameborder="0" allowfullscreen></iframe>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="category">
+                <h3><i class="fas fa-download"></i> Additional Resources</h3>
+                <div class="app-cards">
+                    <div class="app-card">
+                        <h4>NDMA India</h4>
+                        <p>Official disaster alerts and information</p>
+                        <a href="bit.ly/3Fb3Osz" class="download-btn">Android</a>
+                        <a href="apple.co/3ywcV3f" class="download-btn">iOS</a>
+                    </div>
+                    <div class="app-card">
+                        <h4>Sachet</h4>
+                        <p>Emergency services directory</p>
+                        <a href="https://sachet.ndma.gov.in/" class="download-btn">Download</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2023 Disaster Management System. All rights reserved.</p>
+        <div class="footer-links">
+            <a href="#">Privacy Policy</a>
+            <a href="#">Terms of Service</a>
+            <a href="#">Contact Us</a>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

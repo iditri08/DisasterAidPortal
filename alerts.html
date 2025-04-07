@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Disaster Alerts</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <i class="fas fa-shield-alt"></i>
+            <h1>Disaster Aid Portal</h1>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="template.html">Dashboard</a></li>
+                <li><a href="alerts.html" class="active">Alerts</a></li>
+                <li><a href="resources.html">Resources</a></li>
+                <li><a href="about.html">About</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="alerts-main">
+        <h2>Real-time Disaster Alerts</h2>
+        <div class="alert-filters">
+            <select id="alert-type-filter">
+                <option value="all">All Disaster Types</option>
+                <option value="earthquake">Earthquakes</option>
+                <option value="flood">Floods</option>
+                <option value="wildfire">Wildfires</option>
+                <option value="hurricane">Hurricanes</option>
+            </select>
+            <select id="alert-severity-filter">
+                <option value="all">All Severities</option>
+                <option value="red">Red Alerts</option>
+                <option value="orange">Orange Alerts</option>
+                <option value="green">Green Alerts</option>
+            </select>
+        </div>
+        <div id="alerts-container">
+            <!-- Alerts will be loaded here from GDACS API -->
+            <div class="loading-spinner">
+                <i class="fas fa-spinner fa-spin"></i> Loading alerts...
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2023 Disaster Management System. All rights reserved.</p>
+        <div class="footer-links">
+            <a href="#">Privacy Policy</a>
+            <a href="#">Terms of Service</a>
+            <a href="#">Contact Us</a>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

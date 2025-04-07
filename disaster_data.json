@@ -1,0 +1,112 @@
+{
+  "disasters": 
+  [
+    {
+      "id": 1,
+      "type": "Earthquake",
+      "location": [23.6102, 85.2799],
+      "magnitude": 5.1,
+      "description": "Earthquake in Jharkhand",
+      "date": "2022-07-31T08:42:00Z",
+      "severity": "high",
+      "affected_area": 294,
+      "source": "NDMA",
+      "url": "https://ndma.gov.in"
+    },
+    {
+      "id": 2,
+      "type": "Flood",
+      "location": [26.8467, 80.9462],
+      "severity": "extreme",
+      "description": "Flooding in Uttar Pradesh",
+      "date": "2024-07-13T14:30:00Z",
+      "water_level": 3.2,
+      "affected_population": 1800000,
+      "source": "NDMA",
+      "url": "https://ndma.gov.in"
+    },
+
+    {
+      "id": 3,
+      "type": "Cyclone",
+      "location": [12.5000 , 92.7500],
+      "severity": "N/A",
+      "description": "Cyclonic circulation over south of Andaman & Nicobar Islands",
+      "date": "2025-04-04T14:30:00Z",
+      "source": "IMD",
+      "url": "https://mausam.imd.gov.in/imd_latest/contents/cyclone.php"
+    }
+  ],
+  "prone_areas": 
+  [
+    {
+      "id": "PA001",
+      "type": "Earthquake",
+      "name": "Himalayan Belt",
+      "coordinates": [
+        [34.1526, 77.5770],
+        [30.0668, 79.0193],
+        [27.7172, 85.3240]
+      ],
+      "risk_level": "very high",
+      "last_major_event": "2025-04-04",
+      "description": "Seismic zone V - High earthquake risk area"
+    },
+    {
+      "id": "PA002",
+      "type": "Flood",
+      "name": "Ganges Delta",
+      "coordinates": [
+        [22.5726, 88.3639],
+        [21.7679, 88.1393],
+        [23.6840, 86.9721]
+      ],
+      "risk_level": "high",
+      "last_major_event": "2024-09-23",
+      "description": "Flood prone region in West Bengal. Affects neighbouring states severely."
+    },
+    {
+      "id": "PA003",
+      "type": "Cyclone",
+      "name": "East Coast",
+      "coordinates": [
+        [16.9980, 82.2527],
+        [19.7515, 85.9022],
+        [13.0827, 80.2707]
+      ],
+      "risk_level": "high",
+      "last_major_event": "2024-11-20",
+      "description": "Cyclone prone coastal areas"
+    }
+  ],
+  "resources": 
+  [
+    {
+      "id": "RES001",
+      "type": "Shelter",
+      "location": [28.6139, 77.2090],
+      "name": "Delhi Emergency Shelter",
+      "capacity": 1000,
+      "contact": "(011) 6257310",
+      "description": "Primary emergency shelter in Delhi under The Salvation Army"
+    },
+    {
+      "id": "RES002",
+      "type": "Hospital",
+      "location": [19.0760, 72.8777],
+      "name": "Gokuldas Tejpal Hospital",
+      "capacity": 1500,
+      "contact": "022 2262 1465",
+      "description": "Major hospital with emergency facilities"
+    }
+  ],
+  "metadata": {
+    "last_updated": "2023-10-20T12:00:00Z",
+    "data_sources": [
+      "NDMA",
+      "IMD",
+      "NIDM"
+    ],
+    "version": "1.2.0"
+  }
+}

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About & Resources</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <i class="fas fa-shield-alt"></i>
+            <h1>Disaster Aid Portal</h1>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="template.html">Dashboard</a></li>
+                <li><a href="alerts.html">Alerts</a></li>
+                <li><a href="resources.html">Resources</a></li>
+                <li><a href="about.html" class="active">About</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="about-main">
+        <section class="about-section">
+            <h2>About This System</h2>
+            <p>The Disaster Management System is a comprehensive platform designed to monitor, alert, and provide resources for various natural disasters in real-time.</p>
+            <p>Our system integrates with global disaster alert systems to provide timely information to citizens, first responders, and government agencies.</p>
+        </section>
+
+        <section class="india-resources">
+            <h2>Disaster Resources for India</h2>
+            <div class="resource-cards">
+                <div class="resource-card">
+                    <h3><i class="fas fa-phone-alt"></i> Emergency Contacts</h3>
+                    <ul>
+                        <li>National Emergency Number: <strong>112</strong></li>
+                        <li>Disaster Management: <strong>1078</strong></li>
+                        <li>NDRF Helpline: <strong>011-24363260</strong></li>
+                    </ul>
+                </div>
+                <div class="resource-card">
+                    <h3><i class="fas fa-globe-asia"></i> Important Websites</h3>
+                    <ul>
+                        <li><a href="https://ndma.gov.in" target="_blank">NDMA - National Disaster Management Authority</a></li>
+                        <li><a href="https://mha.gov.in" target="_blank">Ministry of Home Affairs</a></li>
+                        <li><a href="https://www.imd.gov.in" target="_blank">India Meteorological Department</a></li>
+                    </ul>
+                </div>
+                <div class="resource-card">
+                    <h3><i class="fas fa-map-marked-alt"></i> State-wise Resources</h3>
+                    <select id="state-selector">
+                        <option value="">Select a state</option>
+                        <option value="maharashtra">Maharashtra</option>
+                        <option value="kerala">Kerala</option>
+                        <option value="odisha">Odisha</option>
+                        <option value="tamilnadu">Tamil Nadu</option>
+                        <option value="westbengal">West Bengal</option>
+                    </select>
+                    <div id="state-resources">
+                        <!-- Default state when none selected -->
+                        <div class="state-default">
+                        </div>
+                        
+                        <!-- Odisha Resources (hidden by default) -->
+                        <div class="state-resource odisha" style="display: none;">
+                            <h4>Odisha Disaster Resources</h4>
+                            <ul class="state-contacts">
+                                <li>Odisha Disaster Management Helpline: <strong>0674-2395398 / 2395531</strong></li>
+                            </ul>
+                            <h4>Websites</h4>
+                            <ul class="state-websites">
+                                <li><a href="https://www.osdma.org/contact-us/#gsc.tab=0" target="_blank">Odisha State Disaster Management Authority</a></li>
+                            </ul>
+                        </div>
+                        
+                        <!-- Tamil Nadu Resources (hidden by default) -->
+                        <div class="state-resource tamilnadu" style="display: none;">
+                            <h4>Tamil Nadu Disaster Resources</h4>
+                            <ul class="state-contacts">
+                                <li>Commissionerate of Revenue Administration and Disaster Management:</li>
+                                <li><strong>044-28410540</strong></li>
+                                <li><strong>044-28410541</strong></li>
+                                <li><strong>044-28410544</strong></li>
+                                <li><strong>044-28410545</strong></li>
+                                <li><strong>044-28410549</strong></li>
+                            </ul>
+                            <h4>Websites</h4>
+                            <ul class="state-websites">
+                                <li><a href="https://tiruvannamalai.nic.in/disaster-management/" target="_blank">Tamil Nadu Disaster Management</a></li>
+                            </ul>
+                        </div>
+                        
+                        <!-- West Bengal Resources (hidden by default) -->
+                        <div class="state-resource westbengal" style="display: none;">
+                            <h4>West Bengal Disaster Resources</h4>
+                            <ul class="state-contacts">
+                                <li>West Bengal Disaster Management Helpline: <strong>033 2214 5664</strong></li>
+                            </ul>
+                            <h4>Websites</h4>
+                            <ul class="state-websites">
+                                <li><a href="http://wbdmd.gov.in/" target="_blank">West Bengal Disaster Management Department</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+    <footer>
+        <p>&copy; 2023 Disaster Management System. All rights reserved.</p>
+        <div class="footer-links">
+            <a href="#">Privacy Policy</a>
+            <a href="#">Terms of Service</a>
+            <a href="#">Contact Us</a>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
