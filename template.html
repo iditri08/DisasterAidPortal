@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Disaster Aid Portal - Dashboard</title>
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link rel="icon" href="favicon-16x16.png" type="image/png">
+    <link rel="portal-icon" href="favicon-16x16.png">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Alert marquee styles */
+        .alert-marquee {
+            background-color: #3498db;
+            color: white;
+            padding: 10px 0;
+            font-weight: bold;
+            font-size: 16px;
+            overflow: hidden;
+            position: relative;
+            margin: 0;
+        }
+        .alert-marquee .content {
+            display: inline-block;
+            padding-left: 100%;
+            animation: marquee 20s linear infinite;
+            white-space: nowrap;
+        }
+        .heat-wave {
+            color: #ffcc00;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        .temperature {
+            font-weight: bold;
+        }
+        .weather-icon {
+            margin: 0 10px;
+        }
+        @keyframes marquee {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-100%); }
+        }
+        
+        /* Heat wave specific styling */
+        .heat-wave-alert {
+            background-color: #e74c3c;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { background-color: #e74c3c; }
+            50% { background-color: #ff6b6b; }
+            100% { background-color: #e74c3c; }
+        }
+        
+        /* Additional styles for prone area markers */
+        .prone-area-icon {
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+        }
+        .prone-area-icon i {
+            position: relative;
+            top: 2px;
+        }
+        .earthquake-prone { color: #e74c3c; }
+        .flood-prone { color: #3498db; }
+        .cyclone-prone { color: #9b59b6; }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <i class="fas fa-shield-alt"></i>
+            <h1>Disaster Aid Portal</h1>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="index.html" class="active">Dashboard</a></li>
+                <li><a href="alerts.html">Alerts</a></li>
+                <li><a href="resources.html">Resources</a></li>
+                <li><a href="about.html">About</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Weather Alert Marquee -->
+    <div class="alert-marquee" id="weatherAlert">
+        <div class="content">
+            <i class="fas fa-sync fa-spin"></i> Loading weather data for Odisha...
+        </div>
+    </div>
+
+    <main>
+        <div class="sidebar">
+            <div class="report-panel">
+                <h3>Report Incident</h3>
+                <form id="incident-form">
+                    <select id="incident-type" required>
+                        <option value="">Select disaster type</option>
+                        <option value="earthquake">Earthquake</option>
+                        <option value="flood">Flood</option>
+                        <option value="cyclone">Cyclone</option>
+                    </select>
+                    <input type="text" id="incident-location" placeholder="Location" required>
+                    <textarea id="incident-description" placeholder="Description" required></textarea>
+                    <button type="submit">Submit Report</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="map-container">
+            <div id="map"></div>
+            <div class="map-controls">
+                <button id="locate-me"><i class="fas fa-location-arrow"></i></button>
+                <button id="zoom-in"><i class="fas fa-plus"></i></button>
+                <button id="zoom-out"><i class="fas fa-minus"></i></button>
+            </div>
+            <div class="legend">
+                <h4>Disaster Legend</h4>
+                <div><i class="legend-icon earthquake"></i> Earthquake</div>
+                <div><i class="legend-icon flood"></i> Flood</div>
+                <div><i class="legend-icon cyclone"></i> Cyclone</div>
+                
+            </div>
+        </div>
+
+        <div class="alert-panel">
+            <h3>Recent Alerts</h3>
+            <div class="alerts-list">
+                <!-- Alerts will be populated by JavaScript -->
+            </div>
+            <a href="alerts.html" class="view-all">View All Alerts →</a>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2023 Disaster Management System. All rights reserved.</p>
+        <div class="footer-links">
+            <a href="#">Privacy Policy</a>
+            <a href="#">Terms of Service</a>
+            <a href="#">Contact Us</a>
+        </div>
+    </footer>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        // Initialize map centered on India
+        const map = L.map('map').setView([20.5937, 78.9629], 5);
+
+        // Add India-focused tile layer
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+            maxZoom: 8,
+            minZoom: 4
+        }).addTo(map);
+
+        // Define India boundaries (approximate)
+        const indiaBounds = L.latLngBounds(
+            L.latLng(6.74678, 68.16238), // Southwest
+            L.latLng(35.67452, 97.39556)  // Northeast
+        );
+        map.setMaxBounds(indiaBounds);
+        map.on('drag', function() {
+            map.panInsideBounds(indiaBounds, { animate: false });
+        });
+
+        // Define icons
+        const disasterIcons = {
+            earthquake: L.divIcon({
+                className: 'earthquake-icon',
+                html: '<i class="fas fa-mountain" style="color: #e74c3c; font-size: 24px;"></i>',
+                iconSize: [24, 24],
+                iconAnchor: [12, 12]
+            }),
+            flood: L.divIcon({
+                className: 'flood-icon',
+                html: '<i class="fas fa-water" style="color: #3498db; font-size: 24px;"></i>',
+                iconSize: [24, 24],
+                iconAnchor: [12, 12]
+            }),
+            cyclone: L.divIcon({
+                className: 'cyclone-icon',
+                html: '<i class="fas fa-wind" style="color: #9b59b6; font-size: 24px;"></i>',
+                iconSize: [24, 24],
+                iconAnchor: [12, 12]
+            }),
+            resource: L.divIcon({
+                className: 'resource-icon',
+                html: '<i class="fas fa-hospital" style="color: #2ecc71; font-size: 24px;"></i>',
+                iconSize: [24, 24],
+                iconAnchor: [12, 12]
+            }),
+            proneArea: (type) => L.divIcon({
+                className: 'prone-area-icon',
+                html: `<i class="fas ${getProneAreaIcon(type)} ${type}-prone" style="font-size: 20px;"></i>`,
+                iconSize: [30, 30],
+                iconAnchor: [15, 15]
+            })
+        };
+
+        function getProneAreaIcon(type) {
+            switch(type) {
+                case 'earthquake': return 'fa-exclamation-triangle';
+                case 'flood': return 'fa-water';
+                case 'cyclone': return 'fa-wind';
+            }
+        }
+
+        // Global variables to store markers and layers
+        let disasterMarkers = [];
+        let proneAreaMarkers = [];
+        let proneAreaPolygons = [];
+        let resourceMarkers = [];
+
+        // Function to fetch and display disaster data
+        async function loadDisasterData() {
+            try {
+                // In a real app, you would fetch from your API
+                // For now, we'll use the JSON data directly
+                const response = await fetch('disaster_data.json');
+                const data = await response.json();
+                
+                const disasters = data.disasters;
+                const proneAreasData = data.prone_areas;
+                const resources = data.resources;
+
+                // Clear existing markers
+                clearMapLayers();
+
+                // Plot disasters
+                plotDisasters(disasters);
+
+                // Plot prone areas (both markers and polygons)
+                plotProneAreas(proneAreasData);
+
+                // Plot resources
+                plotResources(resources);
+
+                // Update alerts panel
+                updateAlertsPanel(disasters);
+
+            } catch (error) {
+                console.error('Error loading disaster data:', error);
+            }
+        }
+
+        function clearMapLayers() {
+            disasterMarkers.forEach(marker => map.removeLayer(marker));
+            proneAreaMarkers.forEach(marker => map.removeLayer(marker));
+            proneAreaPolygons.forEach(polygon => map.removeLayer(polygon));
+            resourceMarkers.forEach(marker => map.removeLayer(marker));
+            
+            disasterMarkers = [];
+            proneAreaMarkers = [];
+            proneAreaPolygons = [];
+            resourceMarkers = [];
+        }
+
+        function plotDisasters(disasters) {
+            disasters.forEach(disaster => {
+                const marker = L.marker(disaster.location, {
+                    icon: disasterIcons[disaster.type] || disasterIcons.earthquake
+                }).addTo(map);
+                
+                marker.bindPopup(createDisasterPopup(disaster));
+                disasterMarkers.push(marker);
+            });
+        }
+
+        function createDisasterPopup(disaster) {
+            return `
+                <h3>${disaster.type.toUpperCase()} ALERT</h3>
+                <p><strong>Location:</strong> ${disaster.description}</p>
+                <p><strong>Severity:</strong> ${disaster.severity}</p>
+                <p><strong>Date:</strong> ${new Date(disaster.date).toLocaleString()}</p>
+                <a href="${disaster.url}" target="_blank">More info</a>
+            `;
+        }
+
+        function plotProneAreas(proneAreasData) {
+            proneAreasData.forEach(area => {
+                // Calculate center point for the marker
+                const center = getCenterOfPolygon(area.coordinates);
+                
+                // Add marker with prone area icon
+                const marker = L.marker(center, {
+                    icon: disasterIcons.proneArea(area.type)
+                }).addTo(map);
+                
+                marker.bindPopup(createProneAreaPopup(area));
+                proneAreaMarkers.push(marker);
+                
+                // Add semi-transparent polygon
+                const polygon = L.polygon(area.coordinates, {
+                    color: getColorForType(area.type),
+                    fillColor: getColorForType(area.type),
+                    fillOpacity: 0.2,
+                    weight: 2
+                }).addTo(map);
+                
+                polygon.bindPopup(createProneAreaPopup(area));
+                proneAreaPolygons.push(polygon);
+            });
+        }
+
+        function getCenterOfPolygon(coordinates) {
+            // Simple centroid calculation (for convex polygons)
+            let latSum = 0, lngSum = 0;
+            coordinates.forEach(point => {
+                latSum += point[0];
+                lngSum += point[1];
+            });
+            return [latSum / coordinates.length, lngSum / coordinates.length];
+        }
+
+        function createProneAreaPopup(area) {
+            return `
+                <h3>${area.name}</h3>
+                <p><strong>Type:</strong> ${area.type}</p>
+                <p><strong>Risk Level:</strong> ${area.risk_level}</p>
+                <p><strong>Last Major Event:</strong> ${area.last_major_event}</p>
+                <p>${area.description}</p>
+            `;
+        }
+
+        function plotResources(resources) {
+            resources.forEach(resource => {
+                const marker = L.marker(resource.location, {
+                    icon: disasterIcons.resource
+                }).addTo(map);
+                
+                marker.bindPopup(createResourcePopup(resource));
+                resourceMarkers.push(marker);
+            });
+        }
+
+        function createResourcePopup(resource) {
+            return `
+                <h3>${resource.name}</h3>
+                <p><strong>Type:</strong> ${resource.type}</p>
+                <p><strong>Capacity:</strong> ${resource.capacity}</p>
+                <p><strong>Contact:</strong> ${resource.contact}</p>
+                <p>${resource.description}</p>
+            `;
+        }
+
+        function getColorForType(type) {
+            switch(type) {
+                case 'earthquake': return '#e74c3c';
+                case 'flood': return '#3498db';
+                case 'cyclone': return '#9b59b6';
+                default: return '#7f8c8d';
+            }
+        }
+
+        // Function to update the alerts panel
+        function updateAlertsPanel(alerts) {
+            const alertsList = document.querySelector('.alerts-list');
+            alertsList.innerHTML = '';
+            
+            alerts.slice(0, 5).forEach(alert => {
+                const alertItem = document.createElement('div');
+                alertItem.className = 'alert-item';
+                
+                let borderColor = '#e74c3c';
+                if (alert.severity === 'Green') borderColor = '#2ecc71';
+                else if (alert.severity === 'Orange') borderColor = '#f39c12';
+                
+                alertItem.style.borderLeft = `4px solid ${borderColor}`;
+                alertItem.innerHTML = `
+                    <h4>${alert.type.charAt(0).toUpperCase() + alert.type.slice(1)} Alert</h4>
+                    <p>${alert.description}</p>
+                    <small>${new Date(alert.date).toLocaleString()} • Severity: ${alert.severity || 'Unknown'}</small>
+                `;
+                alertsList.appendChild(alertItem);
+            });
+        }
+
+        // Handle disaster type filtering
+        document.querySelectorAll('.disaster-option').forEach(option => {
+            option.addEventListener('click', function() {
+                const type = this.getAttribute('data-type');
+                
+                document.querySelectorAll('.disaster-option').forEach(opt => {
+                    opt.classList.remove('active');
+                });
+                this.classList.add('active');
+                
+                // Filter disaster markers
+                disasterMarkers.forEach(marker => {
+                    if (type === 'all' || marker.options.icon.options.className.includes(type)) {
+                        map.addLayer(marker);
+                    } else {
+                        map.removeLayer(marker);
+                    }
+                });
+                
+                // Filter prone area markers and polygons
+                proneAreaMarkers.forEach((marker, index) => {
+                    const areaType = proneAreaPolygons[index].options.color === getColorForType(type);
+                    if (type === 'all' || type === 'resources' || areaType) {
+                        map.addLayer(marker);
+                        map.addLayer(proneAreaPolygons[index]);
+                    } else {
+                        map.removeLayer(marker);
+                        map.removeLayer(proneAreaPolygons[index]);
+                    }
+                });
+                
+                // Filter resources
+                resourceMarkers.forEach(marker => {
+                    if (type === 'all' || type === 'resources') {
+                        map.addLayer(marker);
+                    } else {
+                        map.removeLayer(marker);
+                    }
+                });
+            });
+        });
+
+        // Handle locate me button
+        document.getElementById('locate-me').addEventListener('click', function() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(position => {
+                    const userLatLng = [position.coords.latitude, position.coords.longitude];
+                    if (indiaBounds.contains(userLatLng)) {
+                        map.setView(userLatLng, 12);
+                        L.marker(userLatLng, {
+                            icon: L.divIcon({
+                                className: 'user-location-icon',
+                                html: '<i class="fas fa-user" style="color: #2ecc71; font-size: 24px;"></i>',
+                                iconSize: [24, 24],
+                                iconAnchor: [12, 12]
+                            })
+                        }).addTo(map).bindPopup('Your current location').openPopup();
+                    } else {
+                        alert('You are outside of India. The map is focused on India only.');
+                    }
+                });
+            } else {
+                alert('Geolocation is not supported by your browser');
+            }
+        });
+
+        // Handle zoom buttons
+        document.getElementById('zoom-in').addEventListener('click', function() {
+            map.zoomIn();
+        });
+
+        document.getElementById('zoom-out').addEventListener('click', function() {
+            map.zoomOut();
+        });
+
+        // Handle incident report form
+        document.getElementById('incident-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const type = document.getElementById('incident-type').value;
+            const location = document.getElementById('incident-location').value;
+            const description = document.getElementById('incident-description').value;
+            
+            try {
+                // In a real app, you would send this to your backend
+                console.log('Incident reported:', { type, location, description });
+                
+                // Simulate adding to map (in real app, would come from backend response)
+                alert('Incident reported successfully! This would be saved to database in a real application.');
+                
+                // Refresh data
+                loadDisasterData();
+                
+                this.reset();
+            } catch (error) {
+                console.error('Error reporting incident:', error);
+                alert(`Error: ${error.message}`);
+            }
+        });
+
+        // WeatherAPI Configuration
+        const WEATHER_API_KEY = '365ead5f72fa49a9bd541021250504';
+        const LOCATION = 'Bhubaneswar'; // Capital of Odisha
+        
+        // Function to fetch weather data from WeatherAPI
+        async function fetchWeatherData() {
+            try {
+                const response = await fetch(`https://api.weatherapi.com/v1/current.json?key=${WEATHER_API_KEY}&q=${LOCATION}&aqi=no`);
+                const data = await response.json();
+                
+                if (data.error) {
+                    throw new Error(data.error.message);
+                }
+                
+                return {
+                    temp: data.current.temp_c,
+                    condition: data.current.condition.text,
+                    icon: data.current.condition.icon,
+                    feelslike: data.current.feelslike_c,
+                    humidity: data.current.humidity,
+                    isHeatWave: data.current.temp_c >= 40 // Consider 40°C+ as heat wave
+                };
+            } catch (error) {
+                console.error('Error fetching weather data:', error);
+                return null;
+            }
+        }
+
+        // Function to update weather display
+        async function updateWeatherDisplay() {
+            const weatherData = await fetchWeatherData();
+            const marquee = document.getElementById('weatherAlert');
+            const content = marquee.querySelector('.content');
+            
+            if (!weatherData) {
+                content.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Could not load weather data';
+                return;
+            }
+            
+            // Update marquee content
+            let weatherHTML = `
+                <i class="fas fa-location-arrow"></i> ${LOCATION}, Odisha: 
+                <span class="temperature">${weatherData.temp}°C</span>
+                <img src="https:${weatherData.icon}" class="weather-icon" alt="${weatherData.condition}">
+                ${weatherData.condition} (Feels like ${weatherData.feelslike}°C) | 
+                Humidity: ${weatherData.humidity}%
+            `;
+            
+            if (weatherData.isHeatWave) {
+                marquee.classList.add('heat-wave-alert');
+                weatherHTML = `
+                    <span class="heat-wave"><i class="fas fa-exclamation-triangle"></i> HEAT WAVE WARNING!</span> 
+                    ${LOCATION}: <span class="temperature">${weatherData.temp}°C</span> | 
+                    Feels like ${weatherData.feelslike}°C | 
+                    <i class="fas fa-info-circle"></i> Stay hydrated, avoid direct sun
+                `;
+            } else {
+                marquee.classList.remove('heat-wave-alert');
+            }
+            
+            content.innerHTML = weatherHTML;
+            
+            // Add safety tips during heat waves
+            if (weatherData.isHeatWave) {
+                const safetyTips = [
+                    "Drink plenty of water",
+                    "Avoid going out during peak hours (12pm-3pm)",
+                    "Wear light-colored, loose clothing",
+                    "Use sunscreen (SPF 30+)",
+                    "Check on elderly and vulnerable people"
+                ];
+                
+                // Rotate safety tips every 10 seconds
+                let tipIndex = 0;
+                setInterval(() => {
+                    content.innerHTML = `
+                        <span class="heat-wave"><i class="fas fa-exclamation-triangle"></i> HEAT WAVE WARNING!</span> 
+                        ${LOCATION}: <span class="temperature">${weatherData.temp}°C</span> | 
+                        Safety Tip: ${safetyTips[tipIndex % safetyTips.length]}
+                    `;
+                    tipIndex++;
+                }, 10000);
+            }
+        }
+
+        // Initialize weather display and update every 30 minutes
+        document.addEventListener('DOMContentLoaded', function() {
+            updateWeatherDisplay();
+            setInterval(updateWeatherDisplay, 1800000); // 30 minutes
+            
+            // Load disaster data
+            loadDisasterData();
+        });
+    </script>
+</body>
+</html>
