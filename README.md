@@ -1,6 +1,7 @@
 
 <h1>🌍 Disaster Aid Portal – Real-Time Disaster Management for India</h1>
-A **Flask-powered web application** designed to streamline disaster management in India by providing real-time alerts, crowd-sourced incident reports, and centralized government resources.
+
+A <strong>Flask-powered web application</strong> designed to streamline disaster management in India by providing real-time alerts, crowd-sourced incident reports, and centralized government resources.
 
 Key Features
 📍 **Live Interactive Maps:** Visualize active disasters and high-risk zones using API-integrated geodata.
@@ -12,6 +13,7 @@ Key Features
 📚 **Government Resources & Preparedness Guides:** Centralized access to emergency contacts, relief programs, and educational videos
 
 <h2>🛠 Tech Stack</h2>
+
 **Frontend:** HTML5, CSS3, JavaScript (Vanilla JS or lightweight frameworks)
 
 **Backend:** Python (Flask) for robust API handling
