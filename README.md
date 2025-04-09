@@ -21,7 +21,7 @@ Key Features
 
 **Integrations**: JSON-based APIs (e.g. GDACS, NDMA) + custom endpoints
 
-**Deployment:** Render (Backend) + GitHub Pages (Frontend)
+**Deployment:** GitHub Pages (Frontend)
 
 <h2>🌟 Why It Matters?</h2>
 India faces frequent natural disasters, but response systems are often fragmented. This portal bridges the gap by:
